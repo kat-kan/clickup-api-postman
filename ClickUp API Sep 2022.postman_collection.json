@@ -1,0 +1,782 @@
+{
+	"info": {
+		"_postman_id": "65caa792-b5e4-4226-9442-65197eb038ab",
+		"name": "ClickUp API Sep 2022",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10565386"
+	},
+	"item": [
+		{
+			"name": "Attachments",
+			"item": [
+				{
+					"name": "Create a Space",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"spaceName\", \"E2E test2\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response as json\", () => {\r",
+									"    pm.response.to.be.json;\r",
+									"})\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"spaceId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"name\": \"{{spaceName}}\",\n  \"multiple_assignees\": true,\n  \"features\": {\n    \"due_dates\": {\n      \"enabled\": true,\n      \"start_date\": false,\n      \"remap_due_dates\": true,\n      \"remap_closed_due_date\": false\n    },\n    \"time_tracking\": {\n      \"enabled\": false\n    },\n    \"tags\": {\n      \"enabled\": true\n    },\n    \"time_estimates\": {\n      \"enabled\": true\n    },\n    \"checklists\": {\n      \"enabled\": true\n    },\n    \"custom_fields\": {\n      \"enabled\": true\n    },\n    \"remap_dependencies\": {\n      \"enabled\": true\n    },\n    \"dependency_warning\": {\n      \"enabled\": true\n    },\n    \"portfolios\": {\n      \"enabled\": true\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/team/{{teamId}}/space",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"team",
+								"{{teamId}}",
+								"space"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"listId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"listName\", \"Lista zadań\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{listName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"taskId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"taskName\", \"Przetestuj ClickUp\");\r",
+									"pm.collectionVariables.set(\"taskDesc\", \"Zrób testy API\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"name\": \"{{taskName}}\",\n  \"description\": \"{{taskDesc}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/list/{{listId}}/task",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"list",
+								"{{listId}}",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task Attachment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"attachmentId\", responseJson.id);\r",
+									"\r",
+									"console.log(pm.request.body);\r",
+									"console.log(responseJson);\r",
+									"console.log(pm.request.headers);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "multipart/form-data; boundary=<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment",
+									"type": "file",
+									"src": "/C:/Users/User/Documents/clickup-api-postman/resources/attachmentsText.txt"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/task/{{taskId}}/attachment",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"task",
+								"{{taskId}}",
+								"attachment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Attachment (missing in API V2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "clientId",
+									"value": "{{CLIENT_ID}}",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{CLIENT_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://github.com/login/oauth/access_token",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://oauth.pstmn.io/v1/browser-callback",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://github.com/login/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "postman-auth-test",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"105\", \"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"105\""
+							},
+							{
+								"key": "X-Workspace-ID",
+								"value": "36850666"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjo1NDcyMTk5OCwidmFsaWRhdGVkIjp0cnVlLCJ3c19rZXkiOjI1NTMyMTM3NSwic2Vzc2lvbl90b2tlbiI6dHJ1ZSwiaWF0IjoxNjYyMzU5MjE5LCJleHAiOjE2NjI1MzIwMTl9.X46sH8mtAPq23hJ4Zqp_sJxunzUMJbSqGEkHaWA0CZE",
+								"disabled": true
+							},
+							{
+								"key": "X-Build-Git-Sha-Short",
+								"value": "d321ed4"
+							},
+							{
+								"key": "X-CSRF",
+								"value": "1"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "Referer",
+								"value": "https://app.clickup.com/t/2tutxy2"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "sessionId",
+								"value": "hz11yk7ks"
+							},
+							{
+								"key": "build-version",
+								"value": "2.143.0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							}
+						],
+						"url": {
+							"raw": "{{url}}/tasks/v1/attachments?attachment_ids%5B%5D={{attachmentId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tasks",
+								"v1",
+								"attachments"
+							],
+							"query": [
+								{
+									"key": "attachment_ids%5B%5D",
+									"value": "{{attachmentId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify Attachment (missing in API V2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "clientId",
+									"value": "{{CLIENT_ID}}",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{CLIENT_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://github.com/login/oauth/access_token",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://oauth.pstmn.io/v1/browser-callback",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://github.com/login/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "postman-auth-test",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"105\", \"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"105\""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjo1NDcyMTk5OCwidmFsaWRhdGVkIjp0cnVlLCJ3c19rZXkiOjI1NTMyMTM3NSwic2Vzc2lvbl90b2tlbiI6dHJ1ZSwiaWF0IjoxNjYyMzU5MjE5LCJleHAiOjE2NjI1MzIwMTl9.X46sH8mtAPq23hJ4Zqp_sJxunzUMJbSqGEkHaWA0CZE"
+							},
+							{
+								"key": "X-CSRF",
+								"value": "1"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "X-Workspace-ID",
+								"value": "36850666"
+							},
+							{
+								"key": "X-Build-Git-Sha-Short",
+								"value": "d321ed4"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "Referer",
+								"value": "https://app.clickup.com/t/2tutxy2"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "sessionId",
+								"value": "vn9155wvi"
+							},
+							{
+								"key": "build-version",
+								"value": "2.143.0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"de10f8d0-0a32-414e-afe2-d17f54b9e697.jpg\",\r\n    \"date\": \"1662454658896\",\r\n    \"title\": \"changedName\",\r\n    \"type\": 1,\r\n    \"source\": 1,\r\n    \"version\": 0,\r\n    \"extension\": \"jpg\",\r\n    \"thumbnail_small\": \"https://t36850666.p.clickup-attachments.com/t36850666/de10f8d0-0a32-414e-afe2-d17f54b9e697_small.jpg\",\r\n    \"thumbnail_medium\": \"https://t36850666.p.clickup-attachments.com/t36850666/de10f8d0-0a32-414e-afe2-d17f54b9e697_medium.jpg\",\r\n    \"thumbnail_large\": \"https://t36850666.p.clickup-attachments.com/t36850666/de10f8d0-0a32-414e-afe2-d17f54b9e697_large.jpg\",\r\n    \"is_folder\": null,\r\n    \"mimetype\": \"image/jpeg\",\r\n    \"hidden\": false,\r\n    \"parent_id\": \"2tuzrjn\",\r\n    \"size\": 4112893,\r\n    \"total_comments\": 0,\r\n    \"resolved_comments\": 0,\r\n    \"user\": {\r\n        \"id\": 54721998,\r\n        \"username\": \"Kate O\",\r\n        \"email\": \"k.svartalfr@gmail.com\",\r\n        \"initials\": \"KO\",\r\n        \"color\": \"#202020\",\r\n        \"profilePicture\": null\r\n    },\r\n    \"deleted\": false,\r\n    \"orientation\": null,\r\n    \"url\": \"https://t36850666.p.clickup-attachments.com/t36850666/de10f8d0-0a32-414e-afe2-d17f54b9e697/pexels-piccinng-3075993.jpg\",\r\n    \"email_data\": null,\r\n    \"url_w_query\": \"https://t36850666.p.clickup-attachments.com/t36850666/de10f8d0-0a32-414e-afe2-d17f54b9e697/pexels-piccinng-3075993.jpg?view=open\",\r\n    \"url_w_host\": \"https://t36850666.p.clickup-attachments.com/t36850666/de10f8d0-0a32-414e-afe2-d17f54b9e697/pexels-piccinng-3075993.jpg\",\r\n    \"editing\": false\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tasks/v1/attachment/{{attachmentId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tasks",
+								"v1",
+								"attachment",
+								"{{attachmentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Attachment (missing in API V2) Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "clientId",
+									"value": "{{CLIENT_ID}}",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{CLIENT_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://github.com/login/oauth/access_token",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://oauth.pstmn.io/v1/browser-callback",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://github.com/login/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "postman-auth-test",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"105\", \"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"105\""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjo1NDcyMTk5OCwidmFsaWRhdGVkIjp0cnVlLCJ3c19rZXkiOjI1NTMyMTM3NSwic2Vzc2lvbl90b2tlbiI6dHJ1ZSwiaWF0IjoxNjYyMzU5MjE5LCJleHAiOjE2NjI1MzIwMTl9.X46sH8mtAPq23hJ4Zqp_sJxunzUMJbSqGEkHaWA0CZE"
+							},
+							{
+								"key": "X-CSRF",
+								"value": "1"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "X-Workspace-ID",
+								"value": "36850666"
+							},
+							{
+								"key": "X-Build-Git-Sha-Short",
+								"value": "d321ed4"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "Referer",
+								"value": "https://app.clickup.com/t/2tutxy2"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "sessionId",
+								"value": "vn9155wvi"
+							},
+							{
+								"key": "build-version",
+								"value": "2.143.0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							}
+						],
+						"url": {
+							"raw": "{{url}}/tasks/v1/attachment/{{attachmentId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tasks",
+								"v1",
+								"attachment",
+								"{{attachmentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Space",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return empty object\", () => {\r",
+									"    pm.expect(responseJson).to.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 500ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}"
+							]
+						},
+						"description": "Please paste the previously updated space_id for continuity"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{token}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "spaceName",
+			"value": ""
+		},
+		{
+			"key": "spaceId",
+			"value": ""
+		},
+		{
+			"key": "listName",
+			"value": ""
+		},
+		{
+			"key": "listId",
+			"value": ""
+		},
+		{
+			"key": "taskName",
+			"value": ""
+		},
+		{
+			"key": "taskDesc",
+			"value": ""
+		},
+		{
+			"key": "taskId",
+			"value": ""
+		},
+		{
+			"key": "attachmentId",
+			"value": ""
+		}
+	]
+}
