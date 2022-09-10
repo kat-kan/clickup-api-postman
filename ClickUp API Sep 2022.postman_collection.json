@@ -708,6 +708,291 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Spaces",
+			"item": [
+				{
+					"name": "Create a Space",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"spaceName\", \"Example space\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response as json\", () => {\r",
+									"    pm.response.to.be.json;\r",
+									"})\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"spaceId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"name\": \"{{spaceName}}\",\n  \"multiple_assignees\": true,\n  \"features\": {\n    \"due_dates\": {\n      \"enabled\": true,\n      \"start_date\": false,\n      \"remap_due_dates\": true,\n      \"remap_closed_due_date\": false\n    },\n    \"time_tracking\": {\n      \"enabled\": false\n    },\n    \"tags\": {\n      \"enabled\": true\n    },\n    \"time_estimates\": {\n      \"enabled\": true\n    },\n    \"checklists\": {\n      \"enabled\": true\n    },\n    \"custom_fields\": {\n      \"enabled\": true\n    },\n    \"remap_dependencies\": {\n      \"enabled\": true\n    },\n    \"dependency_warning\": {\n      \"enabled\": true\n    },\n    \"portfolios\": {\n      \"enabled\": true\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/team/{{teamId}}/space",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"team",
+								"{{teamId}}",
+								"space"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Space (change name, color, privacy)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n\n{\n  \"name\": \"Changed space name\",\n  \"color\": \"#9B5F52\",\n  \"private\": true,\n  \"multiple_assignees\": true,\n  \"features\": {\n    \"due_dates\": {\n      \"enabled\": true,\n      \"start_date\": false,\n      \"remap_due_dates\": true,\n      \"remap_closed_due_date\": false\n    },\n    \"time_tracking\": {\n      \"enabled\": true\n    },\n    \"tags\": {\n      \"enabled\": true\n    },\n    \"time_estimates\": {\n      \"enabled\": true\n    },\n    \"checklists\": {\n      \"enabled\": true\n    },\n    \"custom_fields\": {\n      \"enabled\": true\n    },\n    \"remap_dependencies\": {\n      \"enabled\": true\n    },\n    \"dependency_warning\": {\n      \"enabled\": false\n    },\n    \"portfolios\": {\n      \"enabled\": true\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{spaceId}}"
+								}
+							]
+						},
+						"description": "Please paste the previously created space_id for continuity"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Space",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Spaces",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/team/{{teamId}}/space",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"team",
+								"{{teamId}}",
+								"space"
+							],
+							"query": [
+								{
+									"key": "archived",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Space",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return empty object\", () => {\r",
+									"    pm.expect(responseJson).to.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}"
+							]
+						},
+						"description": "Please paste the previously updated space_id for continuity"
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -776,6 +1061,14 @@
 		},
 		{
 			"key": "attachmentId",
+			"value": ""
+		},
+		{
+			"key": "firstSpaceId",
+			"value": ""
+		},
+		{
+			"key": "secondSpaceId",
 			"value": ""
 		}
 	]
