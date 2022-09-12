@@ -993,6 +993,531 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Create a Space",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"spaceName\", \"E2E test2\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response as json\", () => {\r",
+									"    pm.response.to.be.json;\r",
+									"})\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"spaceId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"name\": \"{{spaceName}}\",\n  \"multiple_assignees\": true,\n  \"features\": {\n    \"due_dates\": {\n      \"enabled\": true,\n      \"start_date\": false,\n      \"remap_due_dates\": true,\n      \"remap_closed_due_date\": false\n    },\n    \"time_tracking\": {\n      \"enabled\": false\n    },\n    \"tags\": {\n      \"enabled\": true\n    },\n    \"time_estimates\": {\n      \"enabled\": true\n    },\n    \"checklists\": {\n      \"enabled\": true\n    },\n    \"custom_fields\": {\n      \"enabled\": true\n    },\n    \"remap_dependencies\": {\n      \"enabled\": true\n    },\n    \"dependency_warning\": {\n      \"enabled\": true\n    },\n    \"portfolios\": {\n      \"enabled\": true\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/team/{{teamId}}/space",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"team",
+								"{{teamId}}",
+								"space"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"listId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"listName\", \"Lista zadań\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{listName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"taskId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"taskName\", \"Przetestuj ClickUp\");\r",
+									"pm.collectionVariables.set(\"taskDesc\", \"Zrób testy API\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"name\": \"{{taskName}}\",\n  \"description\": \"{{taskDesc}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/list/{{listId}}/task",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"list",
+								"{{listId}}",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Task",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Task Name\",\n    \"description\": \"Updated Task Content\",\n    \"status\": \"in progress\",\n    \"priority\": 1,\n    \"time_estimate\": 8640000,\n    \"assignees\": {\n        \"add\": [182],\n        \"rem\": [183]\n    },\n    \"archived\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/task/{{taskId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"task",
+								"{{taskId}}"
+							],
+							"query": [
+								{
+									"key": "custom_task_ids",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "team_id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Paste task_id from previously created task.\n\nMake sure to update all fields when testing to make sure they are all updated."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Task",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/task/{{taskId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"task",
+								"{{taskId}}"
+							],
+							"query": [
+								{
+									"key": "custom_task_ids",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "team_id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Please delete previously created/updated task for continuity"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/list/{{listId}}/task",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"list",
+								"{{listId}}",
+								"task"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "order_by",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "reverse",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "subtasks",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "space_ids[]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "project_ids[]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "statuses[]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "include_closed",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "assignees[]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "due_date_gt",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "due_date_lt",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "date_created_gt",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "date_created_lt",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "date_updated_gt",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "date_updated_lt",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "custom_fields",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "custom_task_ids",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "team_id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/task/{{taskId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"task",
+								"{{taskId}}"
+							],
+							"query": [
+								{
+									"key": "custom_task_ids",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "team_id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Filtered Team Tasks",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/team/{{teamId}}/task",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"team",
+								"{{teamId}}",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task's Time in Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/task/{{taskId}}/time_in_status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"task",
+								"{{taskId}}",
+								"time_in_status"
+							],
+							"query": [
+								{
+									"key": "custom_task_ids",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "team_id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Bulk Tasks' Time in Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/task/bulk_time_in_status/task_ids",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"task",
+								"bulk_time_in_status",
+								"task_ids"
+							],
+							"query": [
+								{
+									"key": "custom_task_ids",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "team_id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
