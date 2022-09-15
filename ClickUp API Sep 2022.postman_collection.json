@@ -1004,7 +1004,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"spaceName\", \"E2E test2\");"
+									"pm.collectionVariables.set(\"spaceName\", \"E2E test for tasks API\");"
 								],
 								"type": "text/javascript"
 							}
@@ -1013,6 +1013,9 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"spaceId\", responseJson.id);\r",
+									"\r",
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
@@ -1020,9 +1023,6 @@
 									"pm.test(\"Should return response as json\", () => {\r",
 									"    pm.response.to.be.json;\r",
 									"})\r",
-									"\r",
-									"const responseJson = pm.response.json();\r",
-									"pm.collectionVariables.set(\"spaceId\", responseJson.id);\r",
 									"\r",
 									"pm.test(\"Should return response below 1s\", () => {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
@@ -1070,12 +1070,11 @@
 							"script": {
 								"exec": [
 									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"listId\", responseJson.id);\r",
 									"\r",
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"\r",
-									"pm.collectionVariables.set(\"listId\", responseJson.id);\r",
 									"\r",
 									"pm.test(\"Should return response below 1s\", () => {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
@@ -1088,7 +1087,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"listName\", \"Lista zadań\");"
+									"pm.collectionVariables.set(\"listName\", \"Tasks list for Task API\");"
 								],
 								"type": "text/javascript"
 							}
@@ -1128,12 +1127,11 @@
 							"script": {
 								"exec": [
 									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"taskId\", responseJson.id);\r",
 									"\r",
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"\r",
-									"pm.collectionVariables.set(\"taskId\", responseJson.id);\r",
 									"\r",
 									"pm.test(\"Should return response below 1s\", () => {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
@@ -1146,8 +1144,8 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"taskName\", \"Przetestuj ClickUp\");\r",
-									"pm.collectionVariables.set(\"taskDesc\", \"Zrób testy API\");"
+									"pm.collectionVariables.set(\"taskName\", \"Test ClickUP Task API\");\r",
+									"pm.collectionVariables.set(\"taskDesc\", \"Create requests and test them\");"
 								],
 								"type": "text/javascript"
 							}
@@ -1182,7 +1180,102 @@
 					"response": []
 				},
 				{
+					"name": "Get Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/task/{{taskId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"task",
+								"{{taskId}}"
+							],
+							"query": [
+								{
+									"key": "custom_task_ids",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "team_id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update a Task",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"taskName\", \"Test ClickUP Task API - updated\");\r",
+									"pm.collectionVariables.set(\"taskDesc\", \"Create requests and test them - updated\");\r",
+									"pm.collectionVariables.set(\"taskPriority\", \"3\"); //priority = normal\r",
+									"pm.collectionVariables.set(\"taskTimeEstimate\", \"720000\"); //estimate = 2hours\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -1195,7 +1288,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Updated Task Name\",\n    \"description\": \"Updated Task Content\",\n    \"status\": \"in progress\",\n    \"priority\": 1,\n    \"time_estimate\": 8640000,\n    \"assignees\": {\n        \"add\": [182],\n        \"rem\": [183]\n    },\n    \"archived\": false\n}"
+							"raw": "{\n    \"name\": \"{{taskName}}\",\n    \"description\": \"{{taskDesc}}\",\n    \"priority\": \"{{taskPriority}}\",\n    \"status\": \"to do\",\n    \"time_estimate\": {{taskTimeEstimate}},\n    \"parent\": null,\n    \"archived\": false\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/task/{{taskId}}",
@@ -1224,45 +1317,26 @@
 					"response": []
 				},
 				{
-					"name": "Delete a Task",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/task/{{taskId}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"task",
-								"{{taskId}}"
-							],
-							"query": [
-								{
-									"key": "custom_task_ids",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "team_id",
-									"value": "",
-									"disabled": true
-								}
-							]
-						},
-						"description": "Please delete previously created/updated task for continuity"
-					},
-					"response": []
-				},
-				{
 					"name": "Get Tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1387,51 +1461,26 @@
 					"response": []
 				},
 				{
-					"name": "Get Task",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}/task/{{taskId}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"task",
-								"{{taskId}}"
-							],
-							"query": [
-								{
-									"key": "custom_task_ids",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "team_id",
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get Filtered Team Tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -1457,6 +1506,26 @@
 				},
 				{
 					"name": "Get Task's Time in Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 403\", () => {\r",
+									"    //this feature is not available on free plan\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1488,18 +1557,100 @@
 				},
 				{
 					"name": "Get Bulk Tasks' Time in Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/task/bulk_time_in_status/task_ids",
+							"raw": "{{baseUrl}}/task/bulk_time_in_status/task_ids/?task_ids={{taskId}}&task_ids={{taskId}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"task",
 								"bulk_time_in_status",
-								"task_ids"
+								"task_ids",
+								""
+							],
+							"query": [
+								{
+									"key": "custom_task_ids",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "team_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "task_ids",
+									"value": "{{taskId}}"
+								},
+								{
+									"key": "task_ids",
+									"value": "{{taskId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", () => {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/task/{{taskId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"task",
+								"{{taskId}}"
 							],
 							"query": [
 								{
@@ -1513,7 +1664,61 @@
 									"disabled": true
 								}
 							]
+						},
+						"description": "Please delete previously created/updated task for continuity"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Space",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return empty object\", () => {\r",
+									"    pm.expect(responseJson).to.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
 						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}"
+							]
+						},
+						"description": "Please paste the previously updated space_id for continuity"
 					},
 					"response": []
 				}
@@ -1594,6 +1799,14 @@
 		},
 		{
 			"key": "secondSpaceId",
+			"value": ""
+		},
+		{
+			"key": "taskPriority",
+			"value": ""
+		},
+		{
+			"key": "taskTimeEstimate",
 			"value": ""
 		}
 	]
