@@ -16,7 +16,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"spaceName\", \"E2E test2\");"
+									"pm.collectionVariables.set(\"spaceName\", \"E2E test for attachments API\");"
 								],
 								"type": "text/javascript"
 							}
@@ -100,7 +100,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"listName\", \"Lista zadań\");"
+									"pm.collectionVariables.set(\"listName\", \"Tasks list for Attachments API\");"
 								],
 								"type": "text/javascript"
 							}
@@ -158,8 +158,8 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"taskName\", \"Przetestuj ClickUp\");\r",
-									"pm.collectionVariables.set(\"taskDesc\", \"Zrób testy API\");"
+									"pm.collectionVariables.set(\"taskName\", \"Test ClickUP Attachments API\");\r",
+									"pm.collectionVariables.set(\"taskDesc\", \"Create requests and test them\");"
 								],
 								"type": "text/javascript"
 							}
@@ -719,7 +719,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"spaceName\", \"Example space\");"
+									"pm.collectionVariables.set(\"spaceName\", \"E2E test for Space API\");"
 								],
 								"type": "text/javascript"
 							}
