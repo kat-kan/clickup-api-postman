@@ -1723,6 +1723,416 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Folders",
+			"item": [
+				{
+					"name": "Create a Space",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"spaceName\", \"Test for Folder API\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response as json\", () => {\r",
+									"    pm.response.to.be.json;\r",
+									"})\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"spaceId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"name\": \"{{spaceName}}\",\n  \"multiple_assignees\": true,\n  \"features\": {\n    \"due_dates\": {\n      \"enabled\": true,\n      \"start_date\": false,\n      \"remap_due_dates\": true,\n      \"remap_closed_due_date\": false\n    },\n    \"time_tracking\": {\n      \"enabled\": false\n    },\n    \"tags\": {\n      \"enabled\": true\n    },\n    \"time_estimates\": {\n      \"enabled\": true\n    },\n    \"checklists\": {\n      \"enabled\": true\n    },\n    \"custom_fields\": {\n      \"enabled\": true\n    },\n    \"remap_dependencies\": {\n      \"enabled\": true\n    },\n    \"dependency_warning\": {\n      \"enabled\": true\n    },\n    \"portfolios\": {\n      \"enabled\": true\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/team/{{teamId}}/space",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"team",
+								"{{teamId}}",
+								"space"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Folder",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"folderName\", \"Folder API Test\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"pm.collectionVariables.set(\"folderId\", responseJson.id);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response as json\", () => {\r",
+									"    pm.response.to.be.json;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{folderName}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}/folder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}",
+								"folder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Folder (change name)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"folderName\", \"Updated name - Folder API Test\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response as json\", () => {\r",
+									"    pm.response.to.be.json;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{folderName}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/folder/{{folderId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"folder",
+								"{{folderId}}"
+							]
+						},
+						"description": "Please paste previously created folder_id for continuity"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Folders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response as json\", () => {\r",
+									"    pm.response.to.be.json;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}/folder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}",
+								"folder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Folder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response as json\", () => {\r",
+									"    pm.response.to.be.json;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/folder/{{folderId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"folder",
+								"{{folderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Folder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return empty object\", () => {\r",
+									"    pm.expect(responseJson).to.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/folder/{{folderId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"folder",
+								"{{folderId}}"
+							]
+						},
+						"description": "Please paste previously updated folder_id for continuity"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Space",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return empty object\", () => {\r",
+									"    pm.expect(responseJson).to.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/space/{{spaceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"space",
+								"{{spaceId}}"
+							]
+						},
+						"description": "Please paste the previously updated space_id for continuity"
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -1807,6 +2217,14 @@
 		},
 		{
 			"key": "taskTimeEstimate",
+			"value": ""
+		},
+		{
+			"key": "folderName",
+			"value": ""
+		},
+		{
+			"key": "folderId",
 			"value": ""
 		}
 	]
