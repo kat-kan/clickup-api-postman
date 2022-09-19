@@ -279,44 +279,7 @@
 					],
 					"request": {
 						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "clientId",
-									"value": "{{CLIENT_ID}}",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "{{CLIENT_SECRET}}",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "https://github.com/login/oauth/access_token",
-									"type": "string"
-								},
-								{
-									"key": "redirect_uri",
-									"value": "https://oauth.pstmn.io/v1/browser-callback",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "https://github.com/login/oauth/authorize",
-									"type": "string"
-								},
-								{
-									"key": "tokenName",
-									"value": "postman-auth-test",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [
@@ -334,8 +297,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjo1NDcyMTk5OCwidmFsaWRhdGVkIjp0cnVlLCJ3c19rZXkiOjI1NTMyMTM3NSwic2Vzc2lvbl90b2tlbiI6dHJ1ZSwiaWF0IjoxNjYyMzU5MjE5LCJleHAiOjE2NjI1MzIwMTl9.X46sH8mtAPq23hJ4Zqp_sJxunzUMJbSqGEkHaWA0CZE",
-								"disabled": true
+								"value": "Bearer {{oauthToken}}"
 							},
 							{
 								"key": "X-Build-Git-Sha-Short",
@@ -704,6 +666,133 @@
 							]
 						},
 						"description": "Please paste the previously updated space_id for continuity"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authorization",
+			"item": [
+				{
+					"name": "Get Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"oauthToken\", json.access_token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//please note that authorizationCode can be used only once; when used second time it will fail the request\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/oauth/token?client_id={{clientID}}&client_secret={{clientSecret}}&code={{authorizationCode}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{clientID}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{clientSecret}}"
+								},
+								{
+									"key": "code",
+									"value": "{{authorizationCode}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Authorized User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Authorized Teams",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Should return response below 1s\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/team",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"team"
+							]
+						}
 					},
 					"response": []
 				}
@@ -2140,7 +2229,7 @@
 		"apikey": [
 			{
 				"key": "value",
-				"value": "{{token}}",
+				"value": "{{key}}",
 				"type": "string"
 			},
 			{
@@ -2225,6 +2314,10 @@
 		},
 		{
 			"key": "folderId",
+			"value": ""
+		},
+		{
+			"key": "oauthToken",
 			"value": ""
 		}
 	]
