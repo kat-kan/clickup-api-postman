@@ -2,6 +2,8 @@
 
 ![](https://img.shields.io/badge/Tools-Postman-informational?style=flat&logo=postman&logoColor=white&color=blueviolet)
 
+![postman-run-folder](https://user-images.githubusercontent.com/17500766/191484957-e40bfa50-3e73-412a-b0fa-780b70e679f9.gif)
+
 
 Collections of requests in Postman created during the learning process. Include dynamic variables, tests, Postman environment. 
 
