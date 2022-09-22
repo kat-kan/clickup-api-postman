@@ -21,7 +21,7 @@ Then you need to import collection and environment from this repository into Pos
 
 This collection interacts with following resources: 
 
-Attachments :black_circle: Authorization :black_circle: Checklists :black_circle: Dependencies :black_circle: Spaces :black_circle: Tasks :black_circle: Folders 
+Attachments :purple_circle: Authorization :purple_circle: Checklists :purple_circle: Dependencies :purple_circle: Spaces :purple_circle: Tasks :purple_circle: Folders 
 
 :white_check_mark: you can run specific request, folder or the whole collection
 
@@ -49,6 +49,10 @@ Generating Oauth 2.0 token is more complicated. Here are the steps:
 * Copy and paste **Client ID** and **Client Secret** into matching environment variables
 * You need also authorization code from the user (a.k.a. you) to get Oauth 2.0 token on their account. To get the code, paste in the browser `https://app.clickup.com/api?client_id={YOUR_CLIENT_ID}&redirect_uri=https://oauth.pstmn.io/v1/browser-callback` and select **Connect workspace**. When you approve, you will be redirected to success page and your code will be available in URL after `code=`. Copy and paste it as value of environment variable `authorizationCode`
 * Finally, to get token, you need to send reqeust `Get Access Token` from Authorization folder. Token from the body will be automatically saved as environment variable `oauthToken`. To start using Oauth 2.0 please change Authorization type on collection level. I set API Key auth as default one as it's easier to obtain.
+
+### Authentication in Attachments
+
+ClickUp API V2 docs describes only `POST attachment`. From the UI, user can also view, delete, change the attachment's name. After some digging I managed to include these methods in my collection as well. They have different base URL and don't use API Key or Oauth token to authenticate. It appears that they use token set by `cu_jwt` cookie during login. Unfortunately I was not able to recreate login action in Postman due to usage of Recaptcha V3. If you want to run these 3 requests, please add your `cu_jwt` cookie in collection variables.
 
 ## Issues found
 
